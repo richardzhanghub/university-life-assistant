@@ -25,18 +25,14 @@ public class Goal {
     @ColumnInfo(name = "goal_description")
     private String description;
 
-    @ColumnInfo(name = "goal_progress")
-    private int progressValue;
-
     @ColumnInfo(name = "goal_target")
-    private int targetValue;
+    private double targetValue;
 
-    public Goal(long eventId, String name, String description, int progressValue, int targetValue) {
+    public Goal(long eventId, String name, String description, double targetValue) {
         this.eventId = eventId;
         this.name = name;
-        this.progressValue = progressValue;
-        this.description = description;
         this.targetValue = targetValue;
+        this.description = description;
     }
 
     public long getGoalId() {
@@ -71,19 +67,11 @@ public class Goal {
         this.description = description;
     }
 
-    public int getProgressValue() {
-        return progressValue;
-    }
-
-    public void setProgressValue(int progressValue) {
-        this.progressValue = progressValue;
-    }
-
-    public int getTargetValue() {
+    public double getTargetValue() {
         return targetValue;
     }
 
-    public void setTargetValue(int targetValue) {
+    public void setTargetValue(double targetValue) {
         this.targetValue = targetValue;
     }
 }
