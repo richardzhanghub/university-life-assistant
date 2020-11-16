@@ -1,6 +1,7 @@
 package com.cs446.group18.timetracker.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import java.util.List;
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
     private List<Event> events;
     private LayoutInflater layoutInflater;
+    private onItemClickListener listener;
 
     public EventListAdapter(List<Event> events) {
         this.events = events;
@@ -49,6 +51,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         notifyDataSetChanged();
     }
 
+    public Event getEventAt(int position){
+        return events.get(position);
+    }
+
+
+    // This is the card view
     class ViewHolder extends RecyclerView.ViewHolder {
         private ListItemEventBinding binding;
 
@@ -57,10 +65,33 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             this.binding = binding;
         }
 
+        public ViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(listener != null && position != RecyclerView.NO_POSITION){   // check the position is valid
+                        listener.onItemClick(events.get(position));
+                    }
+
+                }
+            });
+        }
+
+
         void bind(Event event) {
             binding.setEvent(event);
             binding.executePendingBindings();
         }
+
     }
 
+    public interface onItemClickListener{
+        void onItemClick(Event event);
+    }
+
+    public void setOnItemClickListener(onItemClickListener listener){
+        this.listener = listener;
+    }
 }
