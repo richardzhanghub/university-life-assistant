@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/event_list_fragment"
-        android:title="My events"/>
+        android:title="Event list"/>
     <item
         android:id="@+id/goal_list_fragment"
         android:title="My goals"/>
+
+    <item
+        android:id="@+id/nfc_fragment"
+        android:title="NFC Reader"/>
 </menu>
