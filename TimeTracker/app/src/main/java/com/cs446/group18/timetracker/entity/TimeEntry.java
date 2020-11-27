@@ -28,16 +28,15 @@ public class TimeEntry {
     @ColumnInfo(name = "end_time")
     private Date endTime;
 
-    private long duration;
+    private Long duration;
 
-    public TimeEntry(long eventId, Date startTime, Date endTime, long duration) {
+    public TimeEntry(long eventId, Date startTime, Date endTime, Long duration) {
         this.eventId = eventId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.duration = duration;
     }
 
-    public String myFunction(){return "Barry is Awesome";}
     public long getTimeEntryId() {
         return timeEntryId;
     }
@@ -58,8 +57,6 @@ public class TimeEntry {
         return startTime;
     }
 
-    public String getStartTimeStr(){return startTime.toString();}
-
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
@@ -68,19 +65,15 @@ public class TimeEntry {
         return endTime;
     }
 
-    public String getEndTimeStr(){return endTime.toString();}
-
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
-    public long getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
-    public String getDurationStr(){return Long.toString(duration);}
-
-    public void setDuration(long duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 }
