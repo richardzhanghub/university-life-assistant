@@ -31,7 +31,17 @@ public class EventRepository {
         return eventDao.getEvents();
     }
 
+    public Event getEventById(long id) {
+        return eventDao.getEventById(id);
+    }
+
     public void createEvent(Event event) {
         AsyncTask.execute(() -> eventDao.insert(event));
     }
+
+    public void deleteEvent(Event event){ AsyncTask.execute(() -> eventDao.delete(event));}
+
+    public void deleteAllEvents(){ AsyncTask.execute(() -> eventDao.deleteAllEvents());}
+
+    public void updateEvent(Event event){ AsyncTask.execute(() -> eventDao.update(event));}
 }
