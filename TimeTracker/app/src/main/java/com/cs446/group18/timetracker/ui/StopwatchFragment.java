@@ -65,7 +65,7 @@ public class StopwatchFragment extends Fragment{
 
         final View rootView = inflater.inflate(R.layout.fragment_stopwatch, container, false);
         final Chronometer chronometer = rootView.findViewById(R.id.chronometer);
-        startTime = new Date();
+        
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
@@ -82,6 +82,7 @@ public class StopwatchFragment extends Fragment{
 
             if (!mTimerRunning) {
 //                mButtonStartPause.setText("Pause");
+                startTime = new Date();
                 chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
                 chronometer.start();
                 mTimerRunning = true;
@@ -123,7 +124,7 @@ public class StopwatchFragment extends Fragment{
 //            mButtonStartPause.setText("Start");
             pauseOffset = 0;
             chronometer.setBase(SystemClock.elapsedRealtime());
-
+            mButtonStartPause.setVisibility(View.VISIBLE);
         });
         return rootView;
     }
