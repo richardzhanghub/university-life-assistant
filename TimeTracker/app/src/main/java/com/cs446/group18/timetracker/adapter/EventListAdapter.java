@@ -1,12 +1,9 @@
 package com.cs446.group18.timetracker.adapter;
 
-import android.app.admin.ConnectEvent;
-import android.media.MediaDrm;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -16,9 +13,7 @@ import com.cs446.group18.timetracker.R;
 import com.cs446.group18.timetracker.databinding.ListItemEventBinding;
 import com.cs446.group18.timetracker.entity.Event;
 import com.cs446.group18.timetracker.entity.TimeEntry;
-import com.cs446.group18.timetracker.utils.InjectorUtils;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,7 +90,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
                 @Override
                 public void onClick(View v) {
-                    onEventListener.onEventClick(getAdapterPosition());
+                    onEventListener.onEventClick(getAdapterPosition(),false);
 //                    eventID = events.get(getAdapterPosition()).getEventId();
                 }
             });
@@ -114,7 +109,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         // Implemented in Activity - EventListFragment.java to handle unfold action
 
         public interface OnEventListener {
-            void onEventClick(int position);
+        /*
+        * @Param isFromNFC gives wether the event was triggered from NFC to automatically
+        * start Timer
+        * */
+            void onEventClick(int position, boolean isFromNFC);
         }
 
 
