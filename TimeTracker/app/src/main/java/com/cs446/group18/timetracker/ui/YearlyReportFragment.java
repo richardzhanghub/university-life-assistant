@@ -1,5 +1,7 @@
 package com.cs446.group18.timetracker.ui;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 
@@ -47,15 +50,15 @@ public class YearlyReportFragment extends Fragment implements OnMapReadyCallback
     private ArrayList<Float> barDataAll;
     private ArrayList<ArrayList<Float>> barDataOne;
     private ArrayList<WeightedLatLng> locationData;
-    LatLng defaultLocation;
+    private LatLng defaultLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_yearly_report, container, false);
-        PieChart pieChart = v.findViewById(R.id.y_pie_chart);
-        BarChart barChartAll = v.findViewById(R.id.y_bar_chart_all);
-        BarChart barChartOne = v.findViewById(R.id.y_bar_chart_one);
+        View view = inflater.inflate(R.layout.fragment_yearly_report, container, false);
+        PieChart pieChart = view.findViewById(R.id.y_pie_chart);
+        BarChart barChartAll = view.findViewById(R.id.y_bar_chart_all);
+        BarChart barChartOne = view.findViewById(R.id.y_bar_chart_one);
 
         events = new ArrayList<>();
         labels = new ArrayList<>();
@@ -100,6 +103,17 @@ public class YearlyReportFragment extends Fragment implements OnMapReadyCallback
 
             @Override
             protected void onPostExecute(Boolean success) {
+                if (pieData.isEmpty()) {
+                    view.findViewById(R.id.y_charts).setVisibility(View.GONE);
+                    view.findViewById(R.id.y_button_share).setVisibility(View.GONE);
+                    view.findViewById(R.id.y_no_data).setVisibility(View.VISIBLE);
+                    return;
+                } else {
+                    view.findViewById(R.id.y_charts).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.y_button_share).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.y_no_data).setVisibility(View.GONE);
+                }
+
                 PieData dataP = ReportUtil.generatePieData(labels, pieData);
                 ReportUtil.drawPieChart(pieChart, dataP);
 
@@ -108,7 +122,7 @@ public class YearlyReportFragment extends Fragment implements OnMapReadyCallback
 
                 ArrayList<String> xValsOne = new ArrayList<>();
                 Collections.addAll(xValsOne, XLabels);
-                Spinner spinner_event = v.findViewById(R.id.y_spinner_event);
+                Spinner spinner_event = view.findViewById(R.id.y_spinner_event);
                 ArrayAdapter adapter_event = new ArrayAdapter(spinner_event.getContext(),
                         android.R.layout.simple_spinner_item, events);
                 adapter_event.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -132,11 +146,36 @@ public class YearlyReportFragment extends Fragment implements OnMapReadyCallback
                 if (mapFragment != null) {
                     mapFragment.getMapAsync(YearlyReportFragment.this);
                 }
+
+                // Share report
+                FloatingActionButton buttonShare = view.findViewById(R.id.y_button_share);
+                buttonShare.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent();
+                        i.setAction(Intent.ACTION_SEND);
+                        i.setType("image/*");
+                        int drawWidth = pieChart.getWidth();
+                        ArrayList<Bitmap> bitmap = new ArrayList<>();
+                        bitmap.add(ReportUtil.getBitmapFromView(view.findViewById(R.id.title_yearly), drawWidth));
+                        bitmap.add(ReportUtil.getBitmapFromView(pieChart, drawWidth));
+                        bitmap.add(ReportUtil.getBitmapFromView(barChartAll, drawWidth));
+                        bitmap.add(ReportUtil.getBitmapFromView(view.findViewById(R.id.y_spinner_event), drawWidth));
+                        bitmap.add(ReportUtil.getBitmapFromView(barChartOne, drawWidth));
+                        i.putExtra(Intent.EXTRA_STREAM, ReportUtil.getImageUri(getContext(),
+                                ReportUtil.combineImageIntoOne(bitmap, drawWidth), "YearlyReport"));
+                        try {
+                            startActivity(Intent.createChooser(i, null));
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
             }
         }
         new MyAsyncTask().execute();
 
-        return v;
+        return view;
     }
 
     private void updateData(List<EventWithTimeEntries> eventsWithTimeEntries) {
@@ -191,12 +230,12 @@ public class YearlyReportFragment extends Fragment implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
-                .weightedData(locationData)
-                .build();
-        TileOverlay mOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-
-        LatLng defaultLocation = new LatLng(43.4736, -80.5370);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12f));
+        if (locationData.size() != 0) {
+            HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
+                    .weightedData(locationData)
+                    .build();
+            TileOverlay mOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12f));
+        }
     }
 }

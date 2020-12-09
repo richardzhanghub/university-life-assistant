@@ -11,7 +11,7 @@ public class GeolocationRepository {
     private GeolocationDao geolocationDao;
     private static volatile GeolocationRepository instance = null;
 
-    public GeolocationRepository(GeolocationDao geolocationDao) {
+    private GeolocationRepository(GeolocationDao geolocationDao) {
         this.geolocationDao = geolocationDao;
     }
 
@@ -28,6 +28,8 @@ public class GeolocationRepository {
     public List<Geolocation> getGeolocations() {
         return geolocationDao.getGeolocations();
     }
+
+
 
     public Geolocation getGeolocationById(long id) {
         return geolocationDao.getGeolocationById(id);

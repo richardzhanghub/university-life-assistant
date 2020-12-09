@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -20,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.NFCReadActivity" />
+        <activity android:name=".ui.AddEvent"></activity>
+        <activity android:name=".ui.NFCReadActivity"></activity>
         <activity android:name=".ui.NFCWriteActivity" />
         <activity
             android:name=".ui.MainActivity"
